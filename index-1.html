@@ -1,0 +1,1738 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ruang Ilmu — Catatan, Karya & Pengetahuan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&family=Lora:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1410;
+    --parchment: #f5f0e8;
+    --cream: #faf7f2;
+    --gold: #c9a84c;
+    --gold-light: #e8d08a;
+    --rust: #8b3a2a;
+    --sage: #5a7a5e;
+    --dust: #9e9082;
+    --border: #d4c9b5;
+    --shadow: rgba(26,20,16,0.12);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* ===== NOISE TEXTURE OVERLAY ===== */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.4;
+  }
+
+  /* ===== TOPBAR ===== */
+  .topbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(245,240,232,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 3rem;
+    height: 60px;
+  }
+
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .logo span { color: var(--gold); }
+
+  nav { display: flex; gap: 2rem; align-items: center; }
+
+  nav a {
+    font-size: 0.82rem;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--dust);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  nav a:hover { color: var(--ink); }
+
+  .nav-cta {
+    background: var(--ink);
+    color: var(--cream) !important;
+    padding: 0.4rem 1rem;
+    border-radius: 2px;
+    font-size: 0.75rem !important;
+    transition: background 0.2s !important;
+  }
+
+  .nav-cta:hover { background: var(--gold) !important; color: var(--ink) !important; }
+
+  /* ===== HERO ===== */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 8rem 4rem 4rem 5rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-eyebrow {
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    width: 30px;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 5vw, 5.5rem);
+    line-height: 1.05;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--gold);
+    display: block;
+  }
+
+  .hero-desc {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: var(--dust);
+    max-width: 420px;
+    margin-bottom: 3rem;
+  }
+
+  .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+  .btn-primary {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 0.85rem 2rem;
+    font-size: 0.82rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 2px;
+    transition: all 0.25s;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .btn-primary:hover { background: var(--gold); color: var(--ink); }
+
+  .btn-outline {
+    border: 1px solid var(--border);
+    color: var(--dust);
+    padding: 0.85rem 2rem;
+    font-size: 0.82rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 2px;
+    transition: all 0.25s;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .btn-outline:hover { border-color: var(--ink); color: var(--ink); }
+
+  .hero-right {
+    position: relative;
+    background: var(--parchment);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .hero-right::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 60% 40%, rgba(201,168,76,0.15) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 80% at 80% 80%, rgba(139,58,42,0.08) 0%, transparent 60%);
+  }
+
+  .hero-visual {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    padding: 6rem 3rem 4rem 3rem;
+    width: 100%;
+  }
+
+  .hero-card {
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+    animation: floatIn 0.8s ease both;
+  }
+
+  .hero-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px var(--shadow);
+  }
+
+  .hero-card:nth-child(1) { animation-delay: 0.1s; }
+  .hero-card:nth-child(2) { animation-delay: 0.2s; margin-top: 2rem; }
+  .hero-card:nth-child(3) { animation-delay: 0.3s; margin-top: -2rem; }
+  .hero-card:nth-child(4) { animation-delay: 0.4s; }
+
+  @keyframes floatIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .card-icon {
+    font-size: 1.5rem;
+    margin-bottom: 0.2rem;
+  }
+
+  .card-tag {
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 500;
+  }
+
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  .card-meta {
+    font-size: 0.72rem;
+    color: var(--dust);
+  }
+
+  /* ===== STATS STRIP ===== */
+  .stats-strip {
+    background: var(--ink);
+    padding: 1.5rem 5rem;
+    display: flex;
+    gap: 4rem;
+    align-items: center;
+    overflow-x: auto;
+  }
+
+  .stat {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    white-space: nowrap;
+  }
+
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--gold);
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+    color: rgba(245,240,232,0.5);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    line-height: 1.4;
+  }
+
+  .stat-div {
+    width: 1px;
+    height: 40px;
+    background: rgba(245,240,232,0.15);
+    flex-shrink: 0;
+  }
+
+  /* ===== SECTION COMMON ===== */
+  .section {
+    padding: 6rem 5rem;
+  }
+
+  .section-alt { background: var(--parchment); }
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 3.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .section-label::before {
+    content: '';
+    width: 20px;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 3vw, 2.8rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+
+  .see-all {
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--dust);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 2px;
+    transition: color 0.2s, border-color 0.2s;
+    flex-shrink: 0;
+    margin-bottom: 4px;
+  }
+
+  .see-all:hover { color: var(--gold); border-color: var(--gold); }
+
+  /* ===== CERPEN SECTION ===== */
+  .cerpen-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 1.5px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .cerpen-featured {
+    background: var(--cream);
+    padding: 3rem;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+
+  .cerpen-featured:hover { background: var(--parchment); }
+
+  .cerpen-featured::before {
+    content: '"';
+    font-family: 'Playfair Display', serif;
+    font-size: 12rem;
+    color: var(--gold);
+    opacity: 0.08;
+    position: absolute;
+    top: -2rem;
+    left: 1rem;
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .cerpen-badge {
+    display: inline-block;
+    background: var(--rust);
+    color: var(--cream);
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.7rem;
+    border-radius: 2px;
+    margin-bottom: 1.2rem;
+  }
+
+  .cerpen-featured-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.15;
+    margin-bottom: 1rem;
+    letter-spacing: -0.02em;
+  }
+
+  .cerpen-excerpt {
+    font-family: 'Lora', serif;
+    font-style: italic;
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: var(--dust);
+    margin-bottom: 1.5rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .cerpen-meta {
+    font-size: 0.72rem;
+    color: var(--dust);
+    display: flex;
+    gap: 1rem;
+  }
+
+  .cerpen-item {
+    background: var(--cream);
+    padding: 2rem;
+    cursor: pointer;
+    transition: background 0.3s;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .cerpen-item:hover { background: var(--parchment); }
+
+  .cerpen-item-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 0.8rem;
+  }
+
+  .cerpen-genre {
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  /* ===== KNOWLEDGE SECTION ===== */
+  .knowledge-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 2.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .tab-btn {
+    padding: 0.8rem 1.5rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--dust);
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .tab-btn.active {
+    color: var(--ink);
+    border-bottom-color: var(--gold);
+  }
+
+  .tab-btn:hover { color: var(--ink); }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  .knowledge-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .knowledge-card {
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.25s, box-shadow 0.25s;
+  }
+
+  .knowledge-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px var(--shadow);
+  }
+
+  .kcard-top {
+    height: 5px;
+    background: var(--gold);
+  }
+
+  .kcard-top.green { background: var(--sage); }
+  .kcard-top.rust { background: var(--rust); }
+
+  .kcard-body { padding: 1.8rem; }
+
+  .kcard-category {
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--dust);
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .kcard-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 0.8rem;
+  }
+
+  .kcard-desc {
+    font-size: 0.85rem;
+    line-height: 1.7;
+    color: var(--dust);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .kcard-footer {
+    padding: 1rem 1.8rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.72rem;
+    color: var(--dust);
+  }
+
+  .read-time {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  /* ===== LEARNING SECTION ===== */
+  .learning-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 2rem;
+    align-items: start;
+  }
+
+  .learning-sidebar {
+    position: sticky;
+    top: 80px;
+  }
+
+  .sidebar-menu { list-style: none; }
+
+  .sidebar-item {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .sidebar-btn {
+    width: 100%;
+    text-align: left;
+    padding: 1rem 1.2rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    transition: background 0.2s;
+  }
+
+  .sidebar-btn:hover { background: var(--parchment); }
+  .sidebar-btn.active { background: var(--ink); color: var(--cream); }
+
+  .sidebar-arrow { font-size: 0.7rem; opacity: 0.5; }
+
+  .learning-content {
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .learning-header {
+    padding: 2rem 2.5rem;
+    background: var(--ink);
+    color: var(--cream);
+  }
+
+  .learning-header h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+  }
+
+  .learning-header p {
+    font-size: 0.82rem;
+    opacity: 0.6;
+  }
+
+  .notes-list { padding: 1.5rem 2.5rem; }
+
+  .note-item {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.2rem 0;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .note-item:last-child { border-bottom: none; }
+
+  .note-item:hover .note-title { color: var(--gold); }
+
+  .note-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: var(--border);
+    min-width: 40px;
+    line-height: 1;
+  }
+
+  .note-title {
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: color 0.2s;
+    margin-bottom: 0.2rem;
+  }
+
+  .note-info {
+    font-size: 0.72rem;
+    color: var(--dust);
+  }
+
+  /* ===== EBOOK / LIBRARY SECTION ===== */
+  .library-section {
+    background: var(--ink);
+    padding: 6rem 5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .library-section::before {
+    content: 'PERPUSTAKAAN';
+    font-family: 'Playfair Display', serif;
+    font-size: 12rem;
+    font-weight: 900;
+    color: rgba(255,255,255,0.03);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    white-space: nowrap;
+    pointer-events: none;
+    letter-spacing: -0.05em;
+  }
+
+  .library-section .section-label { color: var(--gold-light); }
+  .library-section .section-title { color: var(--cream); }
+  .library-section .see-all { color: rgba(245,240,232,0.4); border-color: rgba(245,240,232,0.2); }
+  .library-section .see-all:hover { color: var(--gold-light); border-color: var(--gold-light); }
+
+  .books-shelf {
+    display: flex;
+    gap: 1.5rem;
+    overflow-x: auto;
+    padding-bottom: 1rem;
+    scrollbar-width: thin;
+    scrollbar-color: var(--gold) var(--ink);
+  }
+
+  .book-card {
+    flex-shrink: 0;
+    width: 180px;
+    cursor: pointer;
+    transition: transform 0.3s;
+  }
+
+  .book-card:hover { transform: translateY(-8px); }
+
+  .book-cover {
+    height: 240px;
+    border-radius: 4px 8px 8px 4px;
+    margin-bottom: 1rem;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    padding: 1rem;
+    overflow: hidden;
+    box-shadow: -4px 4px 20px rgba(0,0,0,0.4), inset -3px 0 8px rgba(0,0,0,0.3);
+  }
+
+  .book-cover::after {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 8px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 4px 0 0 4px;
+  }
+
+  .book-cover.c1 { background: linear-gradient(135deg, #2d4a3e 0%, #4a7c5f 100%); }
+  .book-cover.c2 { background: linear-gradient(135deg, #3a2020 0%, #8b3a2a 100%); }
+  .book-cover.c3 { background: linear-gradient(135deg, #2a2d4a 0%, #4a5080 100%); }
+  .book-cover.c4 { background: linear-gradient(135deg, #4a3a20 0%, #8b6a2a 100%); }
+  .book-cover.c5 { background: linear-gradient(135deg, #2a3a3a 0%, #4a7a7a 100%); }
+  .book-cover.c6 { background: linear-gradient(135deg, #3a2a3a 0%, #7a4a7a 100%); }
+
+  .book-cover-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.9);
+    line-height: 1.3;
+    font-weight: 700;
+    position: relative;
+    z-index: 1;
+  }
+
+  .book-info-title {
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--cream);
+    margin-bottom: 0.3rem;
+    line-height: 1.3;
+  }
+
+  .book-info-meta {
+    font-size: 0.7rem;
+    color: rgba(245,240,232,0.4);
+  }
+
+  /* ===== DAILY NOTE SECTION ===== */
+  .daily-section {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  .daily-left {}
+
+  .daily-entries { display: flex; flex-direction: column; gap: 1.5rem; }
+
+  .daily-entry {
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    gap: 1.5rem;
+    cursor: pointer;
+    padding: 1.5rem;
+    border-radius: 4px;
+    transition: background 0.2s;
+  }
+
+  .daily-entry:hover { background: var(--parchment); }
+
+  .daily-date {
+    text-align: center;
+    border-right: 1px solid var(--border);
+    padding-right: 1.5rem;
+  }
+
+  .day-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 900;
+    line-height: 1;
+    color: var(--gold);
+  }
+
+  .day-month {
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--dust);
+  }
+
+  .daily-body {}
+
+  .daily-tag {
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.5rem;
+  }
+
+  .daily-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+  }
+
+  .daily-excerpt {
+    font-size: 0.85rem;
+    color: var(--dust);
+    line-height: 1.7;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .daily-right {}
+
+  .quote-box {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 3rem;
+    border-radius: 4px;
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+
+  .quote-mark {
+    font-family: 'Playfair Display', serif;
+    font-size: 6rem;
+    color: var(--gold);
+    opacity: 0.3;
+    position: absolute;
+    top: 1rem;
+    left: 2rem;
+    line-height: 1;
+  }
+
+  .quote-text {
+    font-family: 'Lora', serif;
+    font-style: italic;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    position: relative;
+    z-index: 1;
+    margin-bottom: 1.2rem;
+  }
+
+  .quote-source {
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    opacity: 0.7;
+  }
+
+  .tags-cloud {
+    background: var(--parchment);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2rem;
+  }
+
+  .tags-cloud h4 {
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--dust);
+    margin-bottom: 1.2rem;
+  }
+
+  .tags-wrap { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+  .tag {
+    padding: 0.35rem 0.8rem;
+    background: var(--cream);
+    border: 1px solid var(--border);
+    font-size: 0.72rem;
+    border-radius: 2px;
+    color: var(--dust);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+  }
+
+  .tag:hover {
+    background: var(--ink);
+    color: var(--cream);
+    border-color: var(--ink);
+  }
+
+  /* ===== FOOTER ===== */
+  footer {
+    background: var(--ink);
+    padding: 4rem 5rem 2rem;
+    color: var(--cream);
+  }
+
+  .footer-top {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 3rem;
+    margin-bottom: 3rem;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid rgba(245,240,232,0.1);
+  }
+
+  .footer-brand {}
+
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 900;
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  .footer-logo span { color: var(--gold); }
+
+  .footer-tagline {
+    font-size: 0.85rem;
+    line-height: 1.8;
+    color: rgba(245,240,232,0.5);
+    max-width: 280px;
+  }
+
+  .footer-col h5 {
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.2rem;
+  }
+
+  .footer-col ul { list-style: none; }
+
+  .footer-col li { margin-bottom: 0.6rem; }
+
+  .footer-col a {
+    font-size: 0.82rem;
+    color: rgba(245,240,232,0.5);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .footer-col a:hover { color: var(--cream); }
+
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.72rem;
+    color: rgba(245,240,232,0.3);
+  }
+
+  /* ===== ANIMATIONS ===== */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-eyebrow { animation: fadeUp 0.7s ease both; }
+  .hero-title { animation: fadeUp 0.7s ease 0.1s both; }
+  .hero-desc { animation: fadeUp 0.7s ease 0.2s both; }
+  .hero-actions { animation: fadeUp 0.7s ease 0.3s both; }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 1024px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-right { min-height: 400px; }
+    .cerpen-grid { grid-template-columns: 1fr 1fr; }
+    .cerpen-featured { grid-column: 1 / -1; }
+    .knowledge-grid { grid-template-columns: 1fr 1fr; }
+    .learning-layout { grid-template-columns: 1fr; }
+    .daily-section { grid-template-columns: 1fr; }
+    .footer-top { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (max-width: 768px) {
+    .topbar { padding: 0 1.5rem; }
+    nav { display: none; }
+    .section { padding: 4rem 1.5rem; }
+    .hero-left { padding: 6rem 1.5rem 3rem; }
+    .cerpen-grid { grid-template-columns: 1fr; }
+    .knowledge-grid { grid-template-columns: 1fr; }
+    .stats-strip { padding: 1.5rem 2rem; }
+    .library-section { padding: 4rem 1.5rem; }
+    footer { padding: 3rem 1.5rem 1.5rem; }
+    .footer-top { grid-template-columns: 1fr; }
+  }
+
+  /* ===== SCROLL INDICATOR ===== */
+  .scroll-progress {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    height: 2px;
+    background: var(--gold);
+    z-index: 200;
+    transition: width 0.1s;
+    width: 0%;
+  }
+</style>
+</head>
+<body>
+
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <a href="#" class="logo">Ruang<span>Ilmu</span></a>
+  <nav>
+    <a href="#cerpen">Cerpen</a>
+    <a href="#pengetahuan">Pengetahuan</a>
+    <a href="#pembelajaran">Pembelajaran</a>
+    <a href="#perpustakaan">Perpustakaan</a>
+    <a href="#catatan">Catatan</a>
+    <a href="#" class="nav-cta">Tentang Saya</a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow">Ruang Ilmu & Karya</div>
+    <h1 class="hero-title">
+      Satu Ruang<br>
+      untuk Semua<br>
+      <em>Pengetahuan.</em>
+    </h1>
+    <p class="hero-desc">
+      Tempat catatan kampus, pesantren, cerpen, artikel ilmu pengetahuan, 
+      koleksi e-book, dan segala hal yang bernilai hadir dalam satu ruang 
+      yang terorganisir dan mudah dijangkau.
+    </p>
+    <div class="hero-actions">
+      <a href="#pengetahuan" class="btn-primary">Jelajahi Ilmu</a>
+      <a href="#perpustakaan" class="btn-outline">Buka Perpustakaan</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-visual">
+      <div class="hero-card">
+        <div class="card-icon">📖</div>
+        <div class="card-tag">Cerpen Terbaru</div>
+        <div class="card-title">Di Tepi Sungai yang Terlupakan</div>
+        <div class="card-meta">7 menit baca · Fiksi</div>
+      </div>
+      <div class="hero-card">
+        <div class="card-icon">🕌</div>
+        <div class="card-tag">Ilmu Agama</div>
+        <div class="card-title">Makna Sabar dalam Al-Quran</div>
+        <div class="card-meta">12 menit baca</div>
+      </div>
+      <div class="hero-card">
+        <div class="card-icon">🎓</div>
+        <div class="card-tag">Catatan Kampus</div>
+        <div class="card-title">Filsafat Ilmu — Pertemuan 3</div>
+        <div class="card-meta">Catatan · 2025</div>
+      </div>
+      <div class="hero-card">
+        <div class="card-icon">📚</div>
+        <div class="card-tag">E-Book</div>
+        <div class="card-title">Ihya Ulumiddin Vol. I</div>
+        <div class="card-meta">Imam Al-Ghazali · PDF</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-strip">
+  <div class="stat">
+    <div class="stat-num">24</div>
+    <div class="stat-label">Cerpen<br>Ditulis</div>
+  </div>
+  <div class="stat-div"></div>
+  <div class="stat">
+    <div class="stat-num">80+</div>
+    <div class="stat-label">Artikel<br>Pengetahuan</div>
+  </div>
+  <div class="stat-div"></div>
+  <div class="stat">
+    <div class="stat-num">130</div>
+    <div class="stat-label">Catatan<br>Pembelajaran</div>
+  </div>
+  <div class="stat-div"></div>
+  <div class="stat">
+    <div class="stat-num">45</div>
+    <div class="stat-label">E-Book<br>Koleksi</div>
+  </div>
+  <div class="stat-div"></div>
+  <div class="stat">
+    <div class="stat-num">3</div>
+    <div class="stat-label">Tahun<br>Menulis</div>
+  </div>
+</div>
+
+<!-- CERPEN SECTION -->
+<section class="section" id="cerpen">
+  <div class="section-header">
+    <div>
+      <div class="section-label">Karya Fiksi</div>
+      <h2 class="section-title">Cerita Pendek</h2>
+    </div>
+    <a href="#" class="see-all">Semua Cerpen →</a>
+  </div>
+
+  <div class="cerpen-grid">
+    <div class="cerpen-featured">
+      <div class="cerpen-badge">Unggulan</div>
+      <h3 class="cerpen-featured-title">Di Tepi Sungai yang Terlupakan</h3>
+      <p class="cerpen-excerpt">
+        Malam itu Hana berdiri di tepi sungai yang dulu sering ia kunjungi bersama kakeknya. 
+        Air mengalir pelan, seperti kenangan yang enggan pergi. Ia masih ingat bagaimana 
+        kakeknya selalu berkata: "Sungai tidak pernah berbohong, Nak. Ia hanya menceritakan 
+        apa yang sudah terjadi di hulunya..."
+      </p>
+      <div class="cerpen-meta">
+        <span>7 menit baca</span>
+        <span>·</span>
+        <span>Drama · Keluarga</span>
+        <span>·</span>
+        <span>Oktober 2025</span>
+      </div>
+    </div>
+
+    <div class="cerpen-item">
+      <div>
+        <div class="cerpen-genre">Thriller</div>
+        <div class="cerpen-item-title">Pintu yang Tidak Pernah Ditutup</div>
+      </div>
+      <div class="cerpen-meta"><span>5 menit baca</span></div>
+    </div>
+
+    <div class="cerpen-item">
+      <div>
+        <div class="cerpen-genre">Romansa</div>
+        <div class="cerpen-item-title">Sepucuk Surat untuk Musim Gugur</div>
+      </div>
+      <div class="cerpen-meta"><span>9 menit baca</span></div>
+    </div>
+
+    <div class="cerpen-item">
+      <div>
+        <div class="cerpen-genre">Filosofi</div>
+        <div class="cerpen-item-title">Bayangan di Ujung Lorong</div>
+      </div>
+      <div class="cerpen-meta"><span>6 menit baca</span></div>
+    </div>
+
+    <div class="cerpen-item">
+      <div>
+        <div class="cerpen-genre">Islami</div>
+        <div class="cerpen-item-title">Sajadah Terakhir Sang Ayah</div>
+      </div>
+      <div class="cerpen-meta"><span>11 menit baca</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- PENGETAHUAN SECTION -->
+<section class="section section-alt" id="pengetahuan">
+  <div class="section-header">
+    <div>
+      <div class="section-label">Wawasan & Ilmu</div>
+      <h2 class="section-title">Artikel Pengetahuan</h2>
+    </div>
+    <a href="#" class="see-all">Semua Artikel →</a>
+  </div>
+
+  <div class="knowledge-tabs">
+    <button class="tab-btn active" onclick="switchTab('umum', this)">Ilmu Pengetahuan Umum</button>
+    <button class="tab-btn" onclick="switchTab('agama', this)">Ilmu Agama</button>
+  </div>
+
+  <div class="tab-content active" id="tab-umum">
+    <div class="knowledge-grid">
+      <div class="knowledge-card">
+        <div class="kcard-top"></div>
+        <div class="kcard-body">
+          <div class="kcard-category">🌍 Geografi & Alam</div>
+          <h3 class="kcard-title">Mengapa Lautan Menjadi Semakin Asam?</h3>
+          <p class="kcard-desc">Perubahan pH lautan akibat penyerapan CO₂ berdampak besar pada ekosistem laut. Fenomena ini dikenal sebagai pengasaman laut...</p>
+        </div>
+        <div class="kcard-footer">
+          <span class="read-time">📖 8 menit baca</span>
+          <span>Sep 2025</span>
+        </div>
+      </div>
+
+      <div class="knowledge-card">
+        <div class="kcard-top"></div>
+        <div class="kcard-body">
+          <div class="kcard-category">🧠 Psikologi</div>
+          <h3 class="kcard-title">Fenomena Dunning-Kruger dan Kesadaran Diri</h3>
+          <p class="kcard-desc">Mengapa orang yang paling tidak kompeten seringkali adalah yang paling percaya diri? Ilmu kognitif menjawab pertanyaan ini...</p>
+        </div>
+        <div class="kcard-footer">
+          <span class="read-time">📖 10 menit baca</span>
+          <span>Agu 2025</span>
+        </div>
+      </div>
+
+      <div class="knowledge-card">
+        <div class="kcard-top"></div>
+        <div class="kcard-body">
+          <div class="kcard-category">🏛️ Sejarah</div>
+          <h3 class="kcard-title">Kejatuhan Konstantinopel: Akhir Sebuah Era</h3>
+          <p class="kcard-desc">1453 M. Ketika Sultan Mehmed II memasuki kota tua itu, peradaban Byzantium resmi berakhir setelah 1000 tahun bertahan...</p>
+        </div>
+        <div class="kcard-footer">
+          <span class="read-time">📖 15 menit baca</span>
+          <span>Jul 2025</span>
+        </div>
+      </div>
+
+      <div class="knowledge-card">
+        <div class="kcard-top"></div>
+        <div class="kcard-body">
+          <div class="kcard-category">💻 Teknologi</div>
+          <h3 class="kcard-title">Kecerdasan Buatan dan Masa Depan Pekerjaan</h3>
+          <p class="kcard-desc">AI tidak hanya mengubah industri teknologi, melainkan seluruh lanskap pekerjaan global. Apa yang perlu kita siapkan?</p>
+        </div>
+        <div class="kcard-footer">
+          <span class="read-time">📖 12 menit baca</span>
+          <span>Jun 2025</span>
+        </div>
+      </div>
+
+      <div class="knowledge-card">
+        <div class="kcard-top"></div>
+        <div class="kcard-body">
+          <div class="kcard-category">🔬 Sains</div>
+          <h3 class="kcard-title">Relativitas Waktu: Lebih dari Sekadar Teori</h3>
+          <p class="kcard-desc">Jam di puncak gunung bergerak lebih cepat dari jam di lembah. Ini bukan fiksi ilmiah—GPS kita bergantung pada prinsip ini.</p>
+        </div>
+        <div class="kcard-footer">
+          <span class="read-time">📖 9 menit baca</span>
+          <span>Mei 2025</span>
+        </div>
+      </div>
+
+      <div class="knowledge-card">
+        <div class="kcard-top"></div>
+        <div class="kcard-body">
+          <div class="kcard-category">📊 Ekonomi</div>
+          <h3 class="kcard-title">Inflasi: Musuh Tak Kasat Mata Tabunganmu</h3>
+          <p class="kcard-desc">Memahami bagaimana inflasi menggerus nilai uang secara perlahan, dan apa yang bisa dilakukan untuk melindungi diri.</p>
+        </div>
+        <div class="kcard-footer">
+          <span class="read-time">📖 7 menit baca</span>
+          <span>Apr 2025</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-content" id="tab-agama">
+    <div class="knowledge-grid">
+      <div class="knowledge-card">
+        <div class="kcard-top green"></div>
+        <div class="kcard-body">
+          <div class="kcard-category">🕌 Tafsir</div>
+          <h3 class="kcard-title">Makna Sabar dalam Al-Quran: Lebih dari Sekadar Menunggu</h3>
+          <p class="kcard-desc">Kata "sabar" disebut lebih dari 90 kali dalam Al-Quran. Ternyata ada tiga jenis sabar yang berbeda dalam Islam...</p>
+        </div>
+        <div class="kcard-footer">
+          <span class="read-time">📖 12 menit baca</span>
+          <span>Okt 2025</span>
+        </div>
+      </div>
+
+      <div class="knowledge-card">
+        <div class="kcard-top green"></div>
+        <div class="kcard-body">
+          <div class="kcard-category">📿 Hadis</div>
+          <h3 class="kcard-title">Hadis Arba'in: Kumpulan dan Syarah Lengkap</h3>
+          <p class="kcard-desc">Empat puluh hadis pilihan Imam An-Nawawi yang menjadi fondasi utama pemahaman agama Islam beserta penjelasannya.</p>
+        </div>
+        <div class="kcard-footer">
+          <span class="read-time">📖 Serie Panjang</span>
+          <span>Sep 2025</span>
+        </div>
+      </div>
+
+      <div class="knowledge-card">
+        <div class="kcard-top green"></div>
+        <div class="kcard-body">
+          <div class="kcard-category">📚 Fiqih</div>
+          <h3 class="kcard-title">Perbedaan Madzhab dalam Fiqih: Rahmat, Bukan Perpecahan</h3>
+          <p class="kcard-desc">Empat madzhab besar Islam tidak saling bertentangan. Bagaimana memahami perbedaan pendapat ulama secara bijak.</p>
+        </div>
+        <div class="kcard-footer">
+          <span class="read-time">📖 16 menit baca</span>
+          <span>Agu 2025</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PEMBELAJARAN SECTION -->
+<section class="section" id="pembelajaran">
+  <div class="section-header">
+    <div>
+      <div class="section-label">Catatan Studi</div>
+      <h2 class="section-title">Ruang Pembelajaran</h2>
+    </div>
+    <a href="#" class="see-all">Semua Catatan →</a>
+  </div>
+
+  <div class="learning-layout">
+    <div class="learning-sidebar">
+      <ul class="sidebar-menu">
+        <li class="sidebar-item">
+          <button class="sidebar-btn active" onclick="switchLearning('kampus', this)">
+            🎓 Catatan Kampus
+            <span class="sidebar-arrow">▶</span>
+          </button>
+        </li>
+        <li class="sidebar-item">
+          <button class="sidebar-btn" onclick="switchLearning('pesantren', this)">
+            🕌 Catatan Pesantren
+            <span class="sidebar-arrow">▶</span>
+          </button>
+        </li>
+        <li class="sidebar-item">
+          <button class="sidebar-btn" onclick="switchLearning('mandiri', this)">
+            📖 Belajar Mandiri
+            <span class="sidebar-arrow">▶</span>
+          </button>
+        </li>
+      </ul>
+    </div>
+
+    <div class="learning-content">
+      <div id="learn-kampus">
+        <div class="learning-header">
+          <h3>Catatan Kampus</h3>
+          <p>Materi perkuliahan yang terorganisir per mata kuliah</p>
+        </div>
+        <div class="notes-list">
+          <div class="note-item">
+            <div class="note-num">01</div>
+            <div>
+              <div class="note-title">Filsafat Ilmu — Pengenalan Epistemologi</div>
+              <div class="note-info">Pertemuan 1 · Semester 3 · 15 Oktober 2025</div>
+            </div>
+          </div>
+          <div class="note-item">
+            <div class="note-num">02</div>
+            <div>
+              <div class="note-title">Sosiologi Pendidikan — Teori Struktural Fungsional</div>
+              <div class="note-info">Pertemuan 3 · Semester 3 · 18 Oktober 2025</div>
+            </div>
+          </div>
+          <div class="note-item">
+            <div class="note-num">03</div>
+            <div>
+              <div class="note-title">Metodologi Penelitian — Pendekatan Kualitatif</div>
+              <div class="note-info">Pertemuan 2 · Semester 3 · 22 Oktober 2025</div>
+            </div>
+          </div>
+          <div class="note-item">
+            <div class="note-num">04</div>
+            <div>
+              <div class="note-title">Sejarah Peradaban Islam — Dinasti Abbasiyah</div>
+              <div class="note-info">Pertemuan 4 · Semester 3 · 25 Oktober 2025</div>
+            </div>
+          </div>
+          <div class="note-item">
+            <div class="note-num">05</div>
+            <div>
+              <div class="note-title">Bahasa Arab — Nahwu Tingkat Menengah</div>
+              <div class="note-info">Pertemuan 5 · Semester 3 · 29 Oktober 2025</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="learn-pesantren" style="display:none">
+        <div class="learning-header">
+          <h3>Catatan Pesantren</h3>
+          <p>Kitab-kitab yang dipelajari di pondok pesantren</p>
+        </div>
+        <div class="notes-list">
+          <div class="note-item">
+            <div class="note-num">01</div>
+            <div>
+              <div class="note-title">Kitab Ta'lim Muta'allim — Bab Niat dalam Belajar</div>
+              <div class="note-info">Kitab Adab · Syaikh Az-Zarnuji · Bab 1</div>
+            </div>
+          </div>
+          <div class="note-item">
+            <div class="note-num">02</div>
+            <div>
+              <div class="note-title">Fathul Qarib — Bab Thaharah</div>
+              <div class="note-info">Fiqih Syafi'i · Ibnu Qasim Al-Ghazi · Bab 1</div>
+            </div>
+          </div>
+          <div class="note-item">
+            <div class="note-num">03</div>
+            <div>
+              <div class="note-title">Jurumiyah — Bab Mubtada dan Khabar</div>
+              <div class="note-info">Nahwu · Ibnu Ajurrum · Fashl 3</div>
+            </div>
+          </div>
+          <div class="note-item">
+            <div class="note-num">04</div>
+            <div>
+              <div class="note-title">Aqidatul Awam — Sifat Wajib Allah</div>
+              <div class="note-info">Tauhid · Syaikh Ahmad Marzuqi · Bab 2</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="learn-mandiri" style="display:none">
+        <div class="learning-header">
+          <h3>Belajar Mandiri</h3>
+          <p>Catatan dari buku, podcast, dan sumber belajar lainnya</p>
+        </div>
+        <div class="notes-list">
+          <div class="note-item">
+            <div class="note-num">01</div>
+            <div>
+              <div class="note-title">Atomic Habits — Ringkasan & Poin Kunci</div>
+              <div class="note-info">Buku · James Clear · Selesai: Sep 2025</div>
+            </div>
+          </div>
+          <div class="note-item">
+            <div class="note-num">02</div>
+            <div>
+              <div class="note-title">Deep Work — Cara Fokus di Era Distraksi</div>
+              <div class="note-info">Buku · Cal Newport · Selesai: Agu 2025</div>
+            </div>
+          </div>
+          <div class="note-item">
+            <div class="note-num">03</div>
+            <div>
+              <div class="note-title">Belajar Bahasa Arab Mandiri — Progress Log</div>
+              <div class="note-info">Catatan Harian · Ongoing</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PERPUSTAKAAN / EBOOK SECTION -->
+<section class="library-section" id="perpustakaan">
+  <div class="section-header">
+    <div>
+      <div class="section-label">Koleksi Bacaan</div>
+      <h2 class="section-title" style="color:var(--cream)">Perpustakaan Digital</h2>
+    </div>
+    <a href="#" class="see-all">Semua Koleksi →</a>
+  </div>
+
+  <p style="font-size:0.9rem; color:rgba(245,240,232,0.5); margin-bottom:2.5rem; max-width:500px; line-height:1.7;">
+    Koleksi e-book pilihan yang dapat dibaca langsung melalui Google Drive. 
+    Klik untuk membuka dan mulai membaca.
+  </p>
+
+  <div class="books-shelf">
+    <div class="book-card">
+      <div class="book-cover c1">
+        <div class="book-cover-title">Ihya Ulumiddin Vol. I</div>
+      </div>
+      <div class="book-info-title">Ihya Ulumiddin Vol. I</div>
+      <div class="book-info-meta">Imam Al-Ghazali · Tasawuf</div>
+    </div>
+
+    <div class="book-card">
+      <div class="book-cover c2">
+        <div class="book-cover-title">Tafsir Ibnu Katsir</div>
+      </div>
+      <div class="book-info-title">Tafsir Ibnu Katsir</div>
+      <div class="book-info-meta">Ibnu Katsir · Tafsir</div>
+    </div>
+
+    <div class="book-card">
+      <div class="book-cover c3">
+        <div class="book-cover-title">Filsafat Ilmu Pengetahuan</div>
+      </div>
+      <div class="book-info-title">Filsafat Ilmu Pengetahuan</div>
+      <div class="book-info-meta">Jujun S. · Akademik</div>
+    </div>
+
+    <div class="book-card">
+      <div class="book-cover c4">
+        <div class="book-cover-title">Sapiens: A Brief History</div>
+      </div>
+      <div class="book-info-title">Sapiens</div>
+      <div class="book-info-meta">Yuval Noah Harari · Sejarah</div>
+    </div>
+
+    <div class="book-card">
+      <div class="book-cover c5">
+        <div class="book-cover-title">Muqaddimah Ibnu Khaldun</div>
+      </div>
+      <div class="book-info-title">Muqaddimah</div>
+      <div class="book-info-meta">Ibnu Khaldun · Sosiologi</div>
+    </div>
+
+    <div class="book-card">
+      <div class="book-cover c6">
+        <div class="book-cover-title">The Art of Thinking Clearly</div>
+      </div>
+      <div class="book-info-title">The Art of Thinking Clearly</div>
+      <div class="book-info-meta">Rolf Dobelli · Psikologi</div>
+    </div>
+
+    <div class="book-card">
+      <div class="book-cover c1" style="background: linear-gradient(135deg, #3a3020 0%, #7a6030 100%);">
+        <div class="book-cover-title">Riyadhus Shalihin</div>
+      </div>
+      <div class="book-info-title">Riyadhus Shalihin</div>
+      <div class="book-info-meta">Imam An-Nawawi · Hadis</div>
+    </div>
+  </div>
+</section>
+
+<!-- CATATAN HARIAN / PRODUKTIVITAS -->
+<section class="section" id="catatan">
+  <div class="section-header">
+    <div>
+      <div class="section-label">Ruang Produktivitas</div>
+      <h2 class="section-title">Catatan & Refleksi</h2>
+    </div>
+    <a href="#" class="see-all">Semua Catatan →</a>
+  </div>
+
+  <div class="daily-section">
+    <div class="daily-left">
+      <div class="daily-entries">
+        <div class="daily-entry">
+          <div class="daily-date">
+            <div class="day-num">22</div>
+            <div class="day-month">Okt</div>
+          </div>
+          <div class="daily-body">
+            <div class="daily-tag">Refleksi Harian</div>
+            <h3 class="daily-title">Tentang Konsistensi yang Sering Dianggap Remeh</h3>
+            <p class="daily-excerpt">Hari ini saya menyadari bahwa yang membuat seseorang maju bukan hanya bakat atau kecerdasan, melainkan kebiasaan kecil yang dilakukan setiap hari tanpa kecuali...</p>
+          </div>
+        </div>
+
+        <div class="daily-entry">
+          <div class="daily-date">
+            <div class="day-num">19</div>
+            <div class="day-month">Okt</div>
+          </div>
+          <div class="daily-body">
+            <div class="daily-tag">Renungan</div>
+            <h3 class="daily-title">Pelajaran dari Kajian Kitab Hari Ini</h3>
+            <p class="daily-excerpt">Ustadz menjelaskan tentang adab menuntut ilmu yang tertulis dalam Ta'lim Muta'allim. Ada satu kalimat yang benar-benar membuat saya berpikir...</p>
+          </div>
+        </div>
+
+        <div class="daily-entry">
+          <div class="daily-date">
+            <div class="day-num">16</div>
+            <div class="day-month">Okt</div>
+          </div>
+          <div class="daily-body">
+            <div class="daily-tag">Ide & Gagasan</div>
+            <h3 class="daily-title">Mengapa Kita Mudah Lupa Apa yang Sudah Kita Pelajari</h3>
+            <p class="daily-excerpt">Kurva lupa Ebbinghaus menunjukkan bahwa manusia melupakan 70% informasi baru dalam 24 jam pertama. Lalu bagaimana cara mengatasinya?</p>
+          </div>
+        </div>
+
+        <div class="daily-entry">
+          <div class="daily-date">
+            <div class="day-num">12</div>
+            <div class="day-month">Okt</div>
+          </div>
+          <div class="daily-body">
+            <div class="daily-tag">Review Buku</div>
+            <h3 class="daily-title">Selesai Membaca: Atomic Habits oleh James Clear</h3>
+            <p class="daily-excerpt">Buku yang mengubah cara pandang saya tentang produktivitas. Bukan soal motivasi, tapi tentang sistem dan lingkungan yang mendukung kebiasaan baik...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="daily-right">
+      <div class="quote-box">
+        <div class="quote-mark">"</div>
+        <p class="quote-text">Tuntutlah ilmu, sesungguhnya menuntut ilmu adalah pendekatan diri kepada Allah Azza wa jalla, dan mengajarkannya kepada orang yang tidak mengetahuinya adalah sedekah.</p>
+        <div class="quote-source">— HR. Ar-Rabi</div>
+      </div>
+
+      <div class="tags-cloud">
+        <h4>Jelajahi Topik</h4>
+        <div class="tags-wrap">
+          <a href="#" class="tag">Filsafat</a>
+          <a href="#" class="tag">Tasawuf</a>
+          <a href="#" class="tag">Sejarah</a>
+          <a href="#" class="tag">Psikologi</a>
+          <a href="#" class="tag">Bahasa Arab</a>
+          <a href="#" class="tag">Fiqih</a>
+          <a href="#" class="tag">Produktivitas</a>
+          <a href="#" class="tag">Review Buku</a>
+          <a href="#" class="tag">Tafsir</a>
+          <a href="#" class="tag">Sains</a>
+          <a href="#" class="tag">Teknologi</a>
+          <a href="#" class="tag">Catatan Kampus</a>
+          <a href="#" class="tag">Pesantren</a>
+          <a href="#" class="tag">Cerpen</a>
+          <a href="#" class="tag">Refleksi</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <span class="footer-logo">Ruang<span>Ilmu</span></span>
+      <p class="footer-tagline">
+        Ruang pribadi untuk menuliskan, menyimpan, dan berbagi ilmu. 
+        Dari catatan kampus hingga cerpen, dari tafsir hingga sains — semuanya ada di sini.
+      </p>
+    </div>
+
+    <div class="footer-col">
+      <h5>Karya</h5>
+      <ul>
+        <li><a href="#">Cerpen</a></li>
+        <li><a href="#">Puisi</a></li>
+        <li><a href="#">Esai</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h5>Pengetahuan</h5>
+      <ul>
+        <li><a href="#">Ilmu Umum</a></li>
+        <li><a href="#">Ilmu Agama</a></li>
+        <li><a href="#">Perpustakaan</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h5>Pembelajaran</h5>
+      <ul>
+        <li><a href="#">Catatan Kampus</a></li>
+        <li><a href="#">Catatan Pesantren</a></li>
+        <li><a href="#">Belajar Mandiri</a></li>
+        <li><a href="#">Refleksi Harian</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <span>© 2025 RuangIlmu — Ditulis dengan penuh niat dan keikhlasan.</span>
+    <span>Ilmu yang bermanfaat adalah sedekah jariyah.</span>
+  </div>
+</footer>
+
+<script>
+  // Scroll Progress
+  window.addEventListener('scroll', () => {
+    const scrolled = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+    document.getElementById('scrollProgress').style.width = scrolled + '%';
+  });
+
+  // Tab Switching
+  function switchTab(tabId, btn) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + tabId).classList.add('active');
+  }
+
+  // Learning Section Switching
+  function switchLearning(section, btn) {
+    document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('#learn-kampus, #learn-pesantren, #learn-mandiri').forEach(el => el.style.display = 'none');
+    btn.classList.add('active');
+    document.getElementById('learn-' + section).style.display = 'block';
+  }
+
+  // Fade in on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.knowledge-card, .cerpen-item, .book-card, .daily-entry').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>
